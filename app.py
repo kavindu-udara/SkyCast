@@ -562,9 +562,9 @@ def predict_weather_page():
         ["Use Latest Data Values", "Manual Input"]
     )
     
+    input_values = {}
     if input_method == "Manual Input":
         st.subheader("Enter Weather Parameters")
-        input_values = {}
         
         cols = st.columns(len(st.session_state.feature_columns))
         for i, feature in enumerate(st.session_state.feature_columns):

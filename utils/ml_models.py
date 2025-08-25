@@ -70,10 +70,14 @@ class WeatherMLModels:
             # Add model-specific metrics
             if hasattr(model, 'feature_importances_'):
                 feature_importance = pd.DataFrame({
-                    'feature': X.columns,
-                    'importance': model.feature_importances_
+                    'feature': X.columns.tolist(),
+                    'importance': model.feature_importances_.tolist()
                 }).sort_values('importance', ascending=False)
-                metrics['feature_importance'] = feature_importance
+                # Convert to dictionary to avoid JSON serialization issues
+                metrics['feature_importance'] = {
+                    'features': feature_importance['feature'].tolist(),
+                    'importances': feature_importance['importance'].tolist()
+                }
             
             return model, metrics
             

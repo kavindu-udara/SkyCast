@@ -46,7 +46,7 @@ class DataProcessor:
             for col in numeric_columns:
                 if cleaned_df[col].isnull().sum() > 0:
                     # Use forward fill first, then backward fill, then mean
-                    cleaned_df[col] = cleaned_df[col].fillna(method='ffill').fillna(method='bfill')
+                    cleaned_df[col] = cleaned_df[col].ffill().bfill()
                     if cleaned_df[col].isnull().sum() > 0:
                         cleaned_df[col] = cleaned_df[col].fillna(cleaned_df[col].mean())
             

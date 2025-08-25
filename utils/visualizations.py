@@ -146,7 +146,9 @@ class WeatherVisualizations:
             
             if correlations:
                 corr_df = pd.DataFrame(correlations)
-                corr_df = corr_df.reindex(corr_df['Correlation'].abs().sort_values(ascending=False).index)
+                corr_df['Abs_Correlation'] = corr_df['Correlation'].abs()
+                corr_df = corr_df.sort_values('Abs_Correlation', ascending=False)
+                corr_df = corr_df.drop('Abs_Correlation', axis=1)
                 st.dataframe(corr_df.head(10), use_container_width=True)
             
         except Exception as e:
@@ -322,16 +324,36 @@ class WeatherVisualizations:
         except Exception as e:
             st.error(f"Error generating fun insights: {str(e)}")
     
-    def plot_feature_importance(self, feature_importance_df):
+    def plot_feature_importance(self, feature_importance_data):
         """
         Plot feature importance from tree-based models.
         
         Args:
-            feature_importance_df (pd.DataFrame): Feature importance data
+            feature_importance_data (dict or pd.DataFrame): Feature importance data
         """
         try:
+            # Handle both dictionary and DataFrame formats
+            if isinstance(feature_importance_data, dict):
+                # Convert dictionary format to DataFrame
+                features = feature_importance_data.get('features', [])
+                importances = feature_importance_data.get('importances', [])
+                
+                if len(features) != len(importances):
+                    st.error("Feature importance data format is invalid")
+                    return
+                
+                feature_importance_df = pd.DataFrame({
+                    'feature': features,
+                    'importance': importances
+                })
+            else:
+                feature_importance_df = feature_importance_data
+            
+            # Take top 10 features
+            top_features = feature_importance_df.head(10)
+            
             fig = px.bar(
-                feature_importance_df.head(10),
+                top_features,
                 x='importance',
                 y='feature',
                 orientation='h',
