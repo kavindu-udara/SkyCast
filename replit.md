@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a comprehensive weather prediction web application built with Python, Streamlit, and scikit-learn. The app allows users to upload weather datasets, explore and visualize the data, train multiple machine learning models, and make weather forecasts. It provides an interactive interface for data analysis, model comparison, and prediction visualization with features like data cleaning, correlation analysis, time series plotting, and model performance evaluation.
+This is a comprehensive weather prediction web application built with Python, Streamlit, and scikit-learn. The app allows users to upload weather datasets, explore and visualize the data, train multiple machine learning models, and make weather forecasts. It provides an interactive interface for data analysis, model comparison, and prediction visualization with features like data cleaning, correlation analysis, time series plotting, geographic location mapping, and model performance evaluation.
 
 ## User Preferences
 
@@ -40,9 +40,11 @@ Preferred communication style: Simple, everyday language.
 
 ### Visualization System
 - **Interactive Charts**: Plotly-based visualizations for time series, correlations, and distributions
+- **Geographic Mapping**: Interactive weather station location maps with color-coded weather parameters
 - **Real-time Updates**: Dynamic chart generation based on user selections
 - **Export Capabilities**: Download functionality for predictions and visualizations
 - **Responsive Design**: Charts adapt to different screen sizes and data volumes
+- **Location Intelligence**: Map-based visualization showing weather patterns across geographic coordinates
 
 ## External Dependencies
 

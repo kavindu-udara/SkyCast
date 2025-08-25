@@ -414,3 +414,94 @@ class WeatherVisualizations:
             
         except Exception as e:
             st.error(f"Error creating prediction plot: {str(e)}")
+    
+    def plot_weather_locations_map(self, df):
+        """
+        Create an interactive map showing weather station locations with weather data.
+        
+        Args:
+            df (pd.DataFrame): Weather dataset with latitude and longitude columns
+        """
+        try:
+            # Check if latitude and longitude columns exist
+            lat_columns = [col for col in df.columns if 'lat' in col.lower()]
+            lon_columns = [col for col in df.columns if 'lon' in col.lower()]
+            
+            if not lat_columns or not lon_columns:
+                st.warning("🗺️ No location data (latitude/longitude) found in the dataset.")
+                return
+            
+            lat_col = lat_columns[0]
+            lon_col = lon_columns[0]
+            
+            # Get numeric columns for color coding
+            numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
+            # Remove lat/lon from color options
+            color_options = [col for col in numeric_columns if col not in [lat_col, lon_col]]
+            
+            if not color_options:
+                st.warning("No numeric data available for color coding the map.")
+                return
+            
+            # Let user select parameter for color coding
+            color_param = st.selectbox(
+                "🎨 Select parameter for color coding:",
+                color_options,
+                index=0 if color_options else None
+            )
+            
+            if color_param:
+                # Create the map
+                fig = px.scatter_mapbox(
+                    df,
+                    lat=lat_col,
+                    lon=lon_col,
+                    color=color_param,
+                    size_max=15,
+                    hover_data={
+                        col: True for col in df.columns 
+                        if col not in [lat_col, lon_col] and col in numeric_columns
+                    },
+                    title=f"Weather Stations - Colored by {color_param}",
+                    color_continuous_scale="Viridis"
+                )
+                
+                # Update map layout
+                fig.update_layout(
+                    mapbox=dict(
+                        style="open-street-map",
+                        center=dict(
+                            lat=df[lat_col].mean(),
+                            lon=df[lon_col].mean()
+                        ),
+                        zoom=10
+                    ),
+                    height=600,
+                    margin=dict(l=0, r=0, t=50, b=0)
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+                
+                # Show location statistics
+                st.subheader("📍 Location Statistics")
+                col1, col2, col3 = st.columns(3)
+                
+                with col1:
+                    st.metric("Unique Locations", len(df[[lat_col, lon_col]].drop_duplicates()))
+                with col2:
+                    st.metric("Center Latitude", f"{df[lat_col].mean():.4f}°")
+                with col3:
+                    st.metric("Center Longitude", f"{df[lon_col].mean():.4f}°")
+                
+                # Show location spread
+                lat_range = df[lat_col].max() - df[lat_col].min()
+                lon_range = df[lon_col].max() - df[lon_col].min()
+                
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.metric("Latitude Range", f"{lat_range:.4f}°")
+                with col2:
+                    st.metric("Longitude Range", f"{lon_range:.4f}°")
+            
+        except Exception as e:
+            st.error(f"Error creating weather locations map: {str(e)}")

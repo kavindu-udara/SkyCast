@@ -387,8 +387,8 @@ def explore_data_page():
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown('<h3 class="section-header">📈 Data Visualizations</h3>', unsafe_allow_html=True)
     
-    viz_tab1, viz_tab2, viz_tab3, viz_tab4 = st.tabs([
-        "📈 Time Series", "🔥 Correlation Heatmap", "📊 Distribution", "🎉 Fun Insights"
+    viz_tab1, viz_tab2, viz_tab3, viz_tab4, viz_tab5 = st.tabs([
+        "📈 Time Series", "🔥 Correlation Heatmap", "📊 Distribution", "🗺️ Location Map", "🎉 Fun Insights"
     ])
     
     with viz_tab1:
@@ -401,6 +401,11 @@ def explore_data_page():
         visualizations.plot_distributions(filtered_data)
     
     with viz_tab4:
+        st.markdown("### 🗺️ Weather Station Locations")
+        st.markdown("Explore the geographic distribution of weather stations and visualize weather parameters across different locations.")
+        visualizations.plot_weather_locations_map(filtered_data)
+    
+    with viz_tab5:
         visualizations.show_fun_insights(filtered_data)
 
 def train_model_page():
