@@ -15,7 +15,12 @@ class WeatherMLModels:
     """
     
     def __init__(self):
-        self.models = {
+        # Create new instances for each training to avoid conflicts
+        pass
+    
+    def _get_models(self):
+        """Get fresh model instances for training."""
+        return {
             'Linear Regression': LinearRegression(),
             'Random Forest': RandomForestRegressor(
                 n_estimators=100,
@@ -51,11 +56,12 @@ class WeatherMLModels:
                 X, y, test_size=test_size, random_state=random_state
             )
             
-            # Get the model
-            if model_name not in self.models:
+            # Get fresh model instances
+            models = self._get_models()
+            if model_name not in models:
                 raise ValueError(f"Model {model_name} not supported")
             
-            model = self.models[model_name]
+            model = models[model_name]
             
             # Train the model
             model.fit(X_train, y_train)
