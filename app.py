@@ -23,6 +23,183 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Custom CSS for modern styling
+st.markdown("""
+<style>
+    /* Import modern fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    /* Global styling */
+    .main .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        max-width: 1200px;
+    }
+    
+    /* Custom header styling */
+    .custom-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem;
+        border-radius: 15px;
+        color: white;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    
+    .custom-header h1 {
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+        font-size: 2.5rem;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .custom-header p {
+        font-family: 'Inter', sans-serif;
+        font-size: 1.1rem;
+        margin: 0.5rem 0 0 0;
+        opacity: 0.9;
+    }
+    
+    /* Modern sidebar styling */
+    .css-1d391kg {
+        background: linear-gradient(145deg, #f8fafc 0%, #e2e8f0 100%);
+    }
+    
+    /* Card-like containers */
+    .metric-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.06);
+        margin: 1rem 0;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    
+    /* Modern buttons */
+    .stButton > button {
+        background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 2rem;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+    
+    /* Modern selectbox and inputs */
+    .stSelectbox > div > div {
+        border-radius: 8px;
+        border: 2px solid #E5E7EB;
+        transition: border-color 0.2s ease;
+    }
+    
+    .stSelectbox > div > div:focus-within {
+        border-color: #3B82F6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    /* Progress bars */
+    .stProgress > div > div > div {
+        background: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%);
+        border-radius: 10px;
+    }
+    
+    /* Tab styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        border-radius: 8px;
+        padding: 12px 24px;
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+        color: white;
+    }
+    
+    /* Success/warning/error messages */
+    .stSuccess {
+        background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+    }
+    
+    .stWarning {
+        background: linear-gradient(90deg, #F59E0B 0%, #D97706 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+    }
+    
+    .stError {
+        background: linear-gradient(90deg, #EF4444 0%, #DC2626 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+    }
+    
+    /* Data frame styling */
+    .stDataFrame {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    
+    /* Metric styling */
+    [data-testid="metric-container"] {
+        background: white;
+        border: 1px solid rgba(0,0,0,0.06);
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    
+    /* Section headers */
+    .section-header {
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        color: #1F2937;
+        border-bottom: 3px solid #3B82F6;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    /* File uploader */
+    .stFileUploader > div {
+        border: 2px dashed #3B82F6;
+        border-radius: 12px;
+        background: rgba(59, 130, 246, 0.02);
+        padding: 2rem;
+        transition: all 0.2s ease;
+    }
+    
+    .stFileUploader > div:hover {
+        border-color: #1D4ED8;
+        background: rgba(59, 130, 246, 0.05);
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # Initialize session state
 if 'data' not in st.session_state:
     st.session_state.data = None
@@ -41,120 +218,157 @@ ml_models = WeatherMLModels()
 visualizations = WeatherVisualizations()
 
 def main():
-    # Header
-    st.title("🌤️ Weather Prediction Web App")
-    st.markdown("---")
+    # Modern header
+    st.markdown("""
+    <div class="custom-header">
+        <h1>🌤️ Weather Prediction Web App</h1>
+        <p>Advanced weather forecasting using machine learning algorithms</p>
+    </div>
+    """, unsafe_allow_html=True)
     
-    # Sidebar navigation
-    st.sidebar.title("Navigation")
+    # Modern sidebar navigation
+    st.sidebar.markdown("""
+    <h2 style="color: #1F2937; font-family: 'Inter', sans-serif; font-weight: 600; margin-bottom: 1.5rem;">
+        📍 Navigation
+    </h2>
+    """, unsafe_allow_html=True)
+    
     page = st.sidebar.selectbox(
         "Choose a section:",
-        ["Upload Data", "Explore Data", "Train Model", "Predict Weather"]
+        ["📁 Upload Data", "📊 Explore Data", "🤖 Train Model", "🔮 Predict Weather"],
+        format_func=lambda x: x.split(" ", 1)[1]
     )
     
-    if page == "Upload Data":
+    if page == "📁 Upload Data":
         upload_data_page()
-    elif page == "Explore Data":
+    elif page == "📊 Explore Data":
         explore_data_page()
-    elif page == "Train Model":
+    elif page == "🤖 Train Model":
         train_model_page()
-    elif page == "Predict Weather":
+    elif page == "🔮 Predict Weather":
         predict_weather_page()
 
 def upload_data_page():
-    st.header("📁 Upload Weather Data")
+    st.markdown('<h2 class="section-header">📁 Upload Weather Data</h2>', unsafe_allow_html=True)
     
     # Sample data option
-    col1, col2 = st.columns([1, 1])
+    col1, col2 = st.columns([1, 1], gap="large")
     
     with col1:
-        st.subheader("Option 1: Use Sample Dataset")
-        if st.button("Load Sample Weather Data"):
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.markdown("### 🎯 Option 1: Use Sample Dataset")
+        st.markdown("Get started quickly with our pre-loaded weather dataset containing temperature, humidity, rainfall, and more.")
+        if st.button("🚀 Load Sample Weather Data", key="sample_data"):
             try:
                 sample_data = pd.read_csv("data/sample_weather_data.csv")
+                # Convert date column to string to avoid Arrow conversion issues
+                if 'date' in sample_data.columns:
+                    sample_data['date'] = sample_data['date'].astype(str)
                 st.session_state.data = sample_data
-                st.success("Sample dataset loaded successfully!")
-                st.dataframe(sample_data.head())
+                st.success("✅ Sample dataset loaded successfully!")
+                st.dataframe(sample_data.head(), use_container_width=True)
             except FileNotFoundError:
-                st.error("Sample dataset not found. Please upload your own data.")
+                st.error("❌ Sample dataset not found. Please upload your own data.")
+        st.markdown("</div>", unsafe_allow_html=True)
     
     with col2:
-        st.subheader("Option 2: Upload Your Dataset")
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.markdown("### 📤 Option 2: Upload Your Dataset")
+        st.markdown("Upload your own CSV file with weather data for custom analysis and predictions.")
         uploaded_file = st.file_uploader(
             "Choose a CSV file",
             type="csv",
-            help="Upload a weather dataset with columns like temperature, humidity, rainfall, etc."
+            help="Upload a weather dataset with columns like temperature, humidity, rainfall, etc.",
+            key="upload_file"
         )
         
         if uploaded_file is not None:
             try:
                 data = pd.read_csv(uploaded_file)
+                # Convert date columns to string to avoid Arrow conversion issues
+                date_columns = [col for col in data.columns if 'date' in col.lower() or 'time' in col.lower()]
+                for col in date_columns:
+                    data[col] = data[col].astype(str)
                 st.session_state.data = data
-                st.success("Dataset uploaded successfully!")
-                st.dataframe(data.head())
+                st.success("✅ Dataset uploaded successfully!")
+                st.dataframe(data.head(), use_container_width=True)
             except Exception as e:
-                st.error(f"Error reading file: {str(e)}")
+                st.error(f"❌ Error reading file: {str(e)}")
+        st.markdown("</div>", unsafe_allow_html=True)
     
     # Data cleaning section
     if st.session_state.data is not None:
-        st.markdown("---")
-        st.subheader("🧹 Data Cleaning")
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown('<h3 class="section-header">🧹 Data Cleaning & Processing</h3>', unsafe_allow_html=True)
         
-        if st.button("Clean Dataset"):
-            with st.spinner("Cleaning dataset..."):
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.markdown("**Clean your dataset** by handling missing values, removing duplicates, and normalizing data for optimal model performance.")
+        
+        if st.button("✨ Clean Dataset", key="clean_data"):
+            with st.spinner("🔄 Cleaning dataset..."):
                 cleaned_data = data_processor.clean_data(st.session_state.data)
                 st.session_state.cleaned_data = cleaned_data
                 
                 # Show cleaning summary
-                st.success("Dataset cleaned successfully!")
+                st.success("✅ Dataset cleaned successfully!")
                 
-                col1, col2 = st.columns(2)
+                col1, col2, col3 = st.columns(3)
                 with col1:
-                    st.metric("Original Shape", f"{st.session_state.data.shape[0]} × {st.session_state.data.shape[1]}")
+                    st.metric("📊 Original Shape", f"{st.session_state.data.shape[0]} × {st.session_state.data.shape[1]}")
                 with col2:
-                    st.metric("Cleaned Shape", f"{cleaned_data.shape[0]} × {cleaned_data.shape[1]}")
+                    st.metric("✨ Cleaned Shape", f"{cleaned_data.shape[0]} × {cleaned_data.shape[1]}")
+                with col3:
+                    missing_values = st.session_state.data.isnull().sum().sum()
+                    st.metric("🚫 Missing Values", missing_values)
                 
                 # Show data info
-                st.subheader("Dataset Information")
-                st.dataframe(cleaned_data.describe())
+                st.markdown("### 📈 Dataset Statistics")
+                st.dataframe(cleaned_data.describe(), use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
 def explore_data_page():
-    st.header("📊 Explore Weather Data")
+    st.markdown('<h2 class="section-header">📊 Explore Weather Data</h2>', unsafe_allow_html=True)
     
     if st.session_state.cleaned_data is None:
-        st.warning("Please upload and clean your dataset first!")
+        st.warning("⚠️ Please upload and clean your dataset first!")
         return
     
     data = st.session_state.cleaned_data
     
-    # Data overview
-    st.subheader("Dataset Overview")
-    col1, col2, col3, col4 = st.columns(4)
+    # Data overview with modern cards
+    st.markdown("### 📈 Dataset Overview")
+    st.markdown("<div style='margin-bottom: 1rem;'></div>", unsafe_allow_html=True)
+    
+    col1, col2, col3, col4 = st.columns(4, gap="medium")
     
     with col1:
-        st.metric("Total Records", len(data))
+        st.metric("📊 Total Records", f"{len(data):,}")
     with col2:
-        st.metric("Features", len(data.columns))
+        st.metric("🔢 Features", len(data.columns))
     with col3:
-        st.metric("Date Range", f"{len(data)} days")
+        st.metric("📅 Data Points", f"{len(data):,}")
     with col4:
-        st.metric("Missing Values", data.isnull().sum().sum())
+        st.metric("❌ Missing Values", data.isnull().sum().sum())
     
-    # Interactive data table
-    st.subheader("Interactive Data Table")
+    # Interactive data table with modern styling
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown('<h3 class="section-header">🔍 Interactive Data Table</h3>', unsafe_allow_html=True)
     
+    st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
     # Filtering options
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2, gap="medium")
     with col1:
         numeric_columns = data.select_dtypes(include=[np.number]).columns.tolist()
+        filter_column = "None"
         if numeric_columns:
-            filter_column = st.selectbox("Filter by column:", ["None"] + numeric_columns)
+            filter_column = st.selectbox("🎯 Filter by column:", ["None"] + numeric_columns)
     with col2:
+        filter_range = (0, 1)
         if filter_column != "None":
             min_val = float(data[filter_column].min())
             max_val = float(data[filter_column].max())
             filter_range = st.slider(
-                f"Select {filter_column} range:",
+                f"📊 Select {filter_column} range:",
                 min_val, max_val, (min_val, max_val)
             )
     
@@ -167,13 +381,14 @@ def explore_data_page():
         ]
     
     st.dataframe(filtered_data, use_container_width=True)
+    st.markdown("</div>", unsafe_allow_html=True)
     
-    # Visualizations
-    st.markdown("---")
-    st.subheader("📈 Data Visualizations")
+    # Visualizations with modern tabs
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown('<h3 class="section-header">📈 Data Visualizations</h3>', unsafe_allow_html=True)
     
     viz_tab1, viz_tab2, viz_tab3, viz_tab4 = st.tabs([
-        "Time Series", "Correlation Heatmap", "Distribution", "Fun Insights"
+        "📈 Time Series", "🔥 Correlation Heatmap", "📊 Distribution", "🎉 Fun Insights"
     ])
     
     with viz_tab1:
@@ -189,50 +404,54 @@ def explore_data_page():
         visualizations.show_fun_insights(filtered_data)
 
 def train_model_page():
-    st.header("🤖 Train Machine Learning Models")
+    st.markdown('<h2 class="section-header">🤖 Train Machine Learning Models</h2>', unsafe_allow_html=True)
     
     if st.session_state.cleaned_data is None:
-        st.warning("Please upload and clean your dataset first!")
+        st.warning("⚠️ Please upload and clean your dataset first!")
         return
     
     data = st.session_state.cleaned_data
     numeric_columns = data.select_dtypes(include=[np.number]).columns.tolist()
     
     if len(numeric_columns) < 2:
-        st.error("Dataset needs at least 2 numeric columns for training!")
+        st.error("❌ Dataset needs at least 2 numeric columns for training!")
         return
     
-    # Model configuration
-    st.subheader("Model Configuration")
+    # Model configuration with modern styling
+    st.markdown('<h3 class="section-header">⚙️ Model Configuration</h3>', unsafe_allow_html=True)
+    st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
     
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2, gap="large")
     with col1:
         target_variable = st.selectbox(
-            "Select target variable to predict:",
+            "🎯 Select target variable to predict:",
             numeric_columns,
             help="Choose the weather parameter you want to predict"
         )
     
     with col2:
         feature_columns = st.multiselect(
-            "Select feature columns:",
+            "🔢 Select feature columns:",
             [col for col in numeric_columns if col != target_variable],
             default=[col for col in numeric_columns if col != target_variable][:5],
             help="Choose the input features for prediction"
         )
+    st.markdown("</div>", unsafe_allow_html=True)
     
     if not feature_columns:
-        st.error("Please select at least one feature column!")
+        st.error("❌ Please select at least one feature column!")
         return
     
-    # Model selection
-    st.subheader("Model Selection")
+    # Model selection with modern styling
+    st.markdown('<h3 class="section-header">📦 Model Selection</h3>', unsafe_allow_html=True)
+    st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
     models_to_train = st.multiselect(
-        "Select models to train:",
+        "🎨 Select models to train:",
         ["Linear Regression", "Random Forest", "Gradient Boosting"],
         default=["Random Forest"],
         help="You can train and compare multiple models"
     )
+    st.markdown("</div>", unsafe_allow_html=True)
     
     # Training parameters
     col1, col2 = st.columns(2)
@@ -314,10 +533,10 @@ def train_model_page():
             st.plotly_chart(fig, use_container_width=True)
 
 def predict_weather_page():
-    st.header("🔮 Weather Prediction")
+    st.markdown('<h2 class="section-header">🔮 Weather Prediction</h2>', unsafe_allow_html=True)
     
     if not st.session_state.trained_models:
-        st.warning("Please train at least one model first!")
+        st.warning("⚠️ Please train at least one model first!")
         return
     
     # Model selection for prediction
