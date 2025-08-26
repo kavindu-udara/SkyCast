@@ -87,7 +87,3 @@ The models are trained on the preprocessed data, and their performance is evalua
 ## Contributing
 
 Contributions are welcome! If you have any ideas, suggestions, or bug reports, please open an issue or submit a pull request.
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for more details.
