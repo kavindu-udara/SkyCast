@@ -15,6 +15,9 @@ from utils.data_processing import DataProcessor
 from utils.ml_models import WeatherMLModels
 from utils.visualizations import WeatherVisualizations
 
+from utils.util import generate_random_name
+from database.database import connect_db
+
 # Configure page
 st.set_page_config(
     page_title="Weather Prediction App",
@@ -251,11 +254,12 @@ def main():
 def upload_data_page():
     st.markdown('<h2 class="section-header">📁 Upload Weather Data</h2>', unsafe_allow_html=True)
     
+    db = connect_db()
+    
     # Sample data option
     col1, col2 = st.columns([1, 1], gap="large")
     
     with col1:
-        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
         st.markdown("### 🎯 Option 1: Use Sample Dataset")
         st.markdown("Get started quickly with our pre-loaded weather dataset containing temperature, humidity, rainfall, and more.")
         if st.button("🚀 Load Sample Weather Data", key="sample_data"):
@@ -272,7 +276,6 @@ def upload_data_page():
         st.markdown("</div>", unsafe_allow_html=True)
     
     with col2:
-        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
         st.markdown("### 📤 Option 2: Upload Your Dataset")
         st.markdown("Upload your own CSV file with weather data for custom analysis and predictions.")
         uploaded_file = st.file_uploader(
@@ -291,17 +294,80 @@ def upload_data_page():
                     data[col] = data[col].astype(str)
                 st.session_state.data = data
                 st.success("✅ Dataset uploaded successfully!")
+
+                # Generate random filename
+                new_filename = f"{generate_random_name()}.csv"
+                file_path = os.path.join("data", new_filename)
+
+                # Save file - use synchronous approach
+                try:
+                    # Get the file content as bytes
+                    contents = uploaded_file.getvalue()
+                    
+                    # Ensure the data directory exists
+                    os.makedirs("data", exist_ok=True)
+                    
+                    # Write the file synchronously
+                    with open(file_path, "wb") as f:
+                        f.write(contents)
+                    
+                    st.success(f"✅ File saved successfully as {new_filename}")
+                    
+                except Exception as e:
+                    st.error(f"❌ Error saving file: {str(e)}")
+
+                # save in db
+                db_dataset = {
+                    "uploaded_at": datetime.now(),
+                    "csv" : new_filename,
+                    "is_trained": False,
+                }
+
+                try :
+                    db["datasets"].insert_one(db_dataset)
+                except Exception as e :
+                    st.error(f"❌ Error saving in db : {str(e)}")
+
                 st.dataframe(data.head(), use_container_width=True)
             except Exception as e:
                 st.error(f"❌ Error reading file: {str(e)}")
         st.markdown("</div>", unsafe_allow_html=True)
     
+    # Dataset select section
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown('<h3 class="section-header">Old Datasets</h3>', unsafe_allow_html=True)
+    st.markdown("**Select a previouse added dataset**")
+
+    datasets = []
+    result = db["datasets"].find({})
+    for document in result:
+        document["_id"] = str(document["_id"])  # Convert ObjectId to string
+        datasets.append(document)
+
+    selectList = []
+    for data in datasets:
+        selectList.append(data["csv"])
+        
+    selected_dataset = st.selectbox("🎯 Select CSV :", ["None"] + selectList)
+
+    if selected_dataset != "None":
+        try:
+            print(f"selected csv : {selected_dataset}")
+            sample_data = pd.read_csv(f"data/{selected_dataset}")
+                # Convert date column to string to avoid Arrow conversion issues
+            if 'date' in sample_data.columns:
+                sample_data['date'] = sample_data['date'].astype(str)
+                st.session_state.data = sample_data
+                st.success("✅ Sample dataset loaded successfully!")
+                st.dataframe(sample_data.head(), use_container_width=True)
+        except FileNotFoundError:
+                st.error("❌ Dataset not found. Please upload your own data.")
+
     # Data cleaning section
     if st.session_state.data is not None:
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown('<h3 class="section-header">🧹 Data Cleaning & Processing</h3>', unsafe_allow_html=True)
         
-        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
         st.markdown("**Clean your dataset** by handling missing values, removing duplicates, and normalizing data for optimal model performance.")
         
         if st.button("✨ Clean Dataset", key="clean_data"):
@@ -354,7 +420,6 @@ def explore_data_page():
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown('<h3 class="section-header">🔍 Interactive Data Table</h3>', unsafe_allow_html=True)
     
-    st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
     # Filtering options
     col1, col2 = st.columns(2, gap="medium")
     with col1:
@@ -424,7 +489,6 @@ def train_model_page():
     
     # Model configuration with modern styling
     st.markdown('<h3 class="section-header">⚙️ Model Configuration</h3>', unsafe_allow_html=True)
-    st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
     
     col1, col2 = st.columns(2, gap="large")
     with col1:
@@ -449,7 +513,6 @@ def train_model_page():
     
     # Model selection with modern styling
     st.markdown('<h3 class="section-header">📦 Model Selection</h3>', unsafe_allow_html=True)
-    st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
     models_to_train = st.multiselect(
         "🎨 Select models to train:",
         ["Linear Regression", "Random Forest", "Gradient Boosting"],

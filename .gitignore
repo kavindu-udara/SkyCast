@@ -3,3 +3,6 @@
 .venv
 models
 .env
+data
+database/database.py
+.DS_Store
