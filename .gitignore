@@ -2,3 +2,4 @@
 .local
 .venv
 models
+.env
