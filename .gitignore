@@ -6,3 +6,4 @@ models
 data
 database/database.py
 .DS_Store
+__pycache__
